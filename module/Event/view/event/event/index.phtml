@@ -1,0 +1,30 @@
+<?php
+// module/Event/view/event/event/index.phtml:
+
+$title = 'My events';
+$this->headTitle($title);
+?>
+<h1><?php echo $this->escapeHtml($title); ?></h1>
+<p>
+    <a href="<?php echo $this->url('event', array('action'=>'add'));?>">Add new event</a>
+</p>
+
+<table class="table">
+    <tr>
+        <th>Name</th>
+        <th>Artist</th>
+        <th>&nbsp;</th>
+    </tr>
+    <?php foreach ($events as $event) : ?>
+        <tr>
+            <td><?php echo $this->escapeHtml($event->name);?></td>
+            <td><?php echo $this->escapeHtml($event->name);?></td>
+            <td>
+                <a href="<?php echo $this->url('event',
+                    array('action'=>'edit', 'id' => $event->id));?>">Edit</a>
+                <a href="<?php echo $this->url('event',
+                    array('action'=>'delete', 'id' => $event->id));?>">Delete</a>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+</table>
