@@ -1,13 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 4.0.10deb1
+-- version 3.4.10.1deb1
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Mar 20, 2015 at 08:07 AM
--- Server version: 5.5.41-0ubuntu0.14.04.1
--- PHP Version: 5.5.9-1ubuntu4.7
+-- Generation Time: Mar 20, 2015 at 04:52 PM
+-- Server version: 5.5.38
+-- PHP Version: 5.3.10-1ubuntu3.14
 
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
 
@@ -30,18 +30,33 @@ CREATE TABLE IF NOT EXISTS `event` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `user_id` tinyint(3) unsigned NOT NULL,
   `name` varchar(255) NOT NULL,
-  `from` datetime NOT NULL,
-  `to` datetime NOT NULL,
+  `date` date NOT NULL,
+  `from` time NOT NULL,
+  `to` time NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `user_id` (`user_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
+  KEY `user_id` (`user_id`),
+  KEY `from` (`from`,`to`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=18 ;
 
 --
 -- Dumping data for table `event`
 --
 
-INSERT INTO `event` (`id`, `user_id`, `name`, `from`, `to`) VALUES
-(2, 1, 'Trusa', '0000-00-00 00:00:00', '0000-00-00 00:00:00');
+INSERT INTO `event` (`id`, `user_id`, `name`, `date`, `from`, `to`) VALUES
+(2, 1, 'Trusa', '2015-03-20', '10:00:00', '14:00:00'),
+(3, 1, 'Tula', '0000-00-00', '15:14:00', '15:14:00'),
+(4, 1, 'derun', '0000-00-00', '15:15:00', '15:16:00'),
+(5, 1, 'Feldona', '0000-00-00', '10:00:00', '15:00:00'),
+(6, 1, 'ddd', '0000-00-00', '15:17:00', '15:18:00'),
+(7, 1, 'efewf', '0000-00-00', '15:18:00', '15:18:00'),
+(8, 1, 'efefwefewf', '0000-00-00', '15:18:00', '15:18:00'),
+(9, 1, 'e', '0000-00-00', '15:23:00', '15:23:00'),
+(10, 1, 'efwffwefwefwef', '2015-03-20', '15:25:00', '15:25:00'),
+(11, 1, 'j', '2015-03-20', '15:49:00', '15:49:00'),
+(12, 1, 'u', '2015-03-20', '15:49:00', '15:50:00'),
+(13, 2, 'eee', '2015-03-20', '15:49:00', '15:50:00'),
+(14, 1, 'h', '2015-03-20', '16:37:00', '16:38:00'),
+(15, 1, 'g', '2015-03-20', '16:40:00', '16:50:00');
 
 -- --------------------------------------------------------
 
