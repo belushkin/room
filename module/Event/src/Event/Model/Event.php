@@ -5,8 +5,10 @@ namespace Event\Model;
 use Zend\InputFilter\InputFilter;
 use Zend\InputFilter\InputFilterAwareInterface;
 use Zend\InputFilter\InputFilterInterface;
+use Zend\ServiceManager\ServiceLocatorAwareInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
-class Event implements InputFilterAwareInterface
+class Event implements InputFilterAwareInterface, ServiceLocatorAwareInterface
 {
     public $id;
     public $user_id;
@@ -14,7 +16,9 @@ class Event implements InputFilterAwareInterface
     public $date;
     public $from;
     public $to;
+
     protected $inputFilter;
+    protected $serviceLocator;
 
     public function exchangeArray($data)
     {
@@ -50,6 +54,19 @@ class Event implements InputFilterAwareInterface
             ));
 
             $inputFilter->add(array(
+                'name'     => 'date',
+                'required' => true,
+                'validators'  => array(
+                    array(
+                        'name'    => 'Date',
+                        'options' => array(
+                            'format' => 'Y-m-d',
+                        ),
+                    ),
+                ),
+            ));
+
+            $inputFilter->add(array(
                 'name'     => 'name',
                 'required' => true,
                 'filters'  => array(
@@ -68,8 +85,8 @@ class Event implements InputFilterAwareInterface
                 ),
             ));
 
-            /*$inputFilter->add(array(
-                'name'     => 'title',
+            $inputFilter->add(array(
+                'name'     => 'from',
                 'required' => true,
                 'filters'  => array(
                     array('name' => 'StripTags'),
@@ -77,20 +94,75 @@ class Event implements InputFilterAwareInterface
                 ),
                 'validators' => array(
                     array(
-                        'name'    => 'StringLength',
+                        'name'    => 'Date',
                         'options' => array(
-                            'encoding' => 'UTF-8',
-                            'min'      => 1,
-                            'max'      => 100,
+                            'format' => 'H:i',
                         ),
                     ),
                 ),
-            ));*/
+            ));
+
+            $inputFilter->add(array(
+                'name'     => 'to',
+                'required' => true,
+                'filters'  => array(
+                    array('name' => 'StripTags'),
+                    array('name' => 'StringTrim'),
+                ),
+                'validators' => array(
+                    array(
+                        'name'    => 'Date',
+                        'options' => array(
+                            'format' => 'H:i',
+                        ),
+                    ),
+                    array(
+                        'name' => 'Callback',
+                        'options' => array(
+                            'messages' => array(
+                                \Zend\Validator\Callback::INVALID_VALUE => 'The To should be greater than From',
+                            ),
+                            'callback' => function($value, $context = array()) {
+                                $from = \DateTime::createFromFormat('H:i', $context['from']);
+                                $to = \DateTime::createFromFormat('H:i', $value);
+                                return $to > $from;
+                            },
+                        ),
+                    ),
+                    array(
+                        'name' => 'Callback',
+                        'options' => array(
+                            'messages' => array(
+                                \Zend\Validator\Callback::INVALID_VALUE => 'The Teo should be greater than From',
+                            ),
+                            'callback' => function($value, $context = array()) {
+                                $from = \DateTime::createFromFormat('H:i', $context['from']);
+                                $to = \DateTime::createFromFormat('H:i', $value);
+                                print_r($this->serviceLocator->get('Event\Model\EventTable')->isIntersect($from, $to));
+                                exit();
+                                return true;
+//                                var_dump($to == '16:38');
+//                                return $to == '16:38';
+                            },
+                        ),
+                    ),
+                ),
+            ));
 
             $this->inputFilter = $inputFilter;
         }
 
         return $this->inputFilter;
+    }
+
+    public function getServiceLocator ()
+    {
+        return $this->serviceLocator;
+    }
+
+    public function setServiceLocator (ServiceLocatorInterface $serviceLocator)
+    {
+        $this->serviceLocator = $serviceLocator;
     }
 
 }

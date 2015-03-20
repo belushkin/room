@@ -42,6 +42,11 @@ class Module implements AutoloaderProviderInterface, ConfigProviderInterface, Vi
                     $table = new EventTable($tableGateway);
                     return $table;
                 },
+                'Event\Model\Event' =>  function($sm) {
+                    $model = new Event();
+                    $model->setServiceLocator($sm);
+                    return $model;
+                },
                 'Event\Model\UserTable' =>  function($sm) {
                     $tableGateway = $sm->get('UserTableGateway');
                     $table = new UserTable($tableGateway);

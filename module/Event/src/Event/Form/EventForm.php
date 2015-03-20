@@ -37,7 +37,7 @@ class EventForm extends Form implements ServiceLocatorAwareInterface
                 'label' => 'Name of your event',
             ),
             'attributes' => array(
-                'placeholder'   => 'add a event',
+                'placeholder'   => 'Add a event',
                 'class'         => 'form-control'
             )
         ));
@@ -69,8 +69,8 @@ class EventForm extends Form implements ServiceLocatorAwareInterface
                 'format'=> 'H:i'
             ),
             'attributes' => array(
-                'min'   => '00:00:00',
-                'max'   => '23:59:59',
+                'min'   => '00:00',
+                'max'   => '23:59',
                 'step'  => '60', // seconds; default step interval is 60 seconds
                 'value' => date('H:i',time()),
                 'class' => 'form-control'
@@ -85,8 +85,8 @@ class EventForm extends Form implements ServiceLocatorAwareInterface
                 'format'=> 'H:i'
             ),
             'attributes' => array(
-                'min'   => '00:00:00',
-                'max'   => '23:59:59',
+                'min'   => '00:00',
+                'max'   => '23:59',
                 'step'  => '60', // seconds; default step interval is 60 seconds
                 'value' => date('H:i',time()),
                 'class' => 'form-control'

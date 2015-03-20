@@ -3,6 +3,7 @@
 namespace Event\Model;
 
 use Zend\Db\TableGateway\TableGateway;
+use Zend\Db\Sql\Select;
 
 class EventTable
 {
@@ -30,11 +31,26 @@ class EventTable
         return $row;
     }
 
+    // Explain SELECT id FROM `event` as e where '16:30' between e.from and e.to OR '16:45' between e.from and e.to
+    public function isIntersect(\DateTime $from, \DateTime $to)
+    {
+        try {
+            $rowset = $this->tableGateway->select(function (Select $select) use ($from, $to) {
+                $select->where("'{$from->format('H:i')}' BETWEEN from AND to OR '{$to->format('H:i')}' BETWEEN from AND to");
+            });
+        } catch (\Exception $e) {
+            print_r($e);
+            exit();
+        }
+        return (empty($rowset)) ? false : true;
+    }
+
     public function saveEvent(Event $event)
     {
         $data = array(
             'user_id'   => $event->user_id,
             'name'      => $event->name,
+            'date'      => $event->date,
             'from'      => $event->from,
             'to'        => $event->to,
         );

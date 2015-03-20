@@ -11,6 +11,7 @@ class EventController extends AbstractActionController
 
     protected $eventTable;
     protected $eventForm;
+    protected $eventModel;
 
     public function indexAction()
     {
@@ -25,7 +26,7 @@ class EventController extends AbstractActionController
 
         $request = $this->getRequest();
         if ($request->isPost()) {
-            $event = new Event();
+            $event = $this->getEventModel();
             $form->setInputFilter($event->getInputFilter());
             $form->setData($request->getPost());
 
@@ -37,8 +38,11 @@ class EventController extends AbstractActionController
                 return $this->redirect()->toRoute('event');
             }
         }
-        return array('form' => $form, 'events' => $this->getEventTable()->fetchAll());
-
+        return array(
+            'form' => $form,
+            'events' => $this->getEventTable()->fetchAll(),
+            'messages' => $form->getMessages()
+        );
     }
 
     public function editAction()
@@ -126,6 +130,15 @@ class EventController extends AbstractActionController
             $this->eventForm = $sm->get('Event\Form\EventForm');
         }
         return $this->eventForm;
+    }
+
+    public function getEventModel()
+    {
+        if (!$this->eventModel) {
+            $sm = $this->getServiceLocator();
+            $this->eventModel = $sm->get('Event\Model\Event');
+        }
+        return $this->eventModel;
     }
 
 }

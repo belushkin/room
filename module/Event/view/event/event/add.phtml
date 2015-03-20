@@ -20,16 +20,16 @@ $this->headTitle($title);
         echo $this->form()->openTag($form);
         echo $this->formHidden($form->get('id'));
         echo $this->formHidden($form->get('date'));?>
-        <div class="form-group"><?php
-            echo $this->formRow($form->get('name'));?>
+        <div class="form-group<?php echo (isset($messages['name'])) ? ' has-error' : '';?>"><?php
+            echo $this->formRow()->setInputErrorClass('has-error')->render($form->get('name'));?>
         </div>
         <div class="form-group"><?php
             echo $this->formRow($form->get('user_id')); ?>
         </div>
-        <div class="form-group"><?php
+        <div class="form-group<?php echo (isset($messages['from'])) ? ' has-error' : '';?>"><?php
             echo $this->formRow($form->get('from')); ?>
         </div>
-        <div class="form-group"><?php
+        <div class="form-group<?php echo (isset($messages['to'])) ? ' has-error' : '';?>"><?php
             echo $this->formRow($form->get('to')); ?>
         </div> <?php
         echo $this->formSubmit($form->get('submit'));
