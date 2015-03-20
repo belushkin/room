@@ -133,16 +133,12 @@ class Event implements InputFilterAwareInterface, ServiceLocatorAwareInterface
                         'name' => 'Callback',
                         'options' => array(
                             'messages' => array(
-                                \Zend\Validator\Callback::INVALID_VALUE => 'The Teo should be greater than From',
+                                \Zend\Validator\Callback::INVALID_VALUE => 'This event is overlapping another one',
                             ),
                             'callback' => function($value, $context = array()) {
                                 $from = \DateTime::createFromFormat('H:i', $context['from']);
                                 $to = \DateTime::createFromFormat('H:i', $value);
-                                print_r($this->serviceLocator->get('Event\Model\EventTable')->isIntersect($from, $to));
-                                exit();
-                                return true;
-//                                var_dump($to == '16:38');
-//                                return $to == '16:38';
+                                return $this->serviceLocator->get('Event\Model\EventTable')->isNotIntersect($from, $to);
                             },
                         ),
                     ),
