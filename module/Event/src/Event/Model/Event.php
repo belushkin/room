@@ -125,6 +125,9 @@ class Event implements InputFilterAwareInterface, ServiceLocatorAwareInterface
                             'callback' => function($value, $context = array()) {
                                 $from = \DateTime::createFromFormat('H:i', $context['from']);
                                 $to = \DateTime::createFromFormat('H:i', $value);
+                                if (!$from || !$to) {
+                                    return false;
+                                }
                                 return $to > $from;
                             },
                         ),
@@ -138,7 +141,10 @@ class Event implements InputFilterAwareInterface, ServiceLocatorAwareInterface
                             'callback' => function($value, $context = array()) {
                                 $from = \DateTime::createFromFormat('H:i', $context['from']);
                                 $to = \DateTime::createFromFormat('H:i', $value);
-                                return $this->serviceLocator->get('Event\Model\EventTable')->isNotIntersect($from, $to);
+                                if (!$from || !$to) {
+                                    return false;
+                                }
+                                return $this->serviceLocator->get('Event\Model\EventTable')->isNotIntersect($context['id'], $from, $to);
                             },
                         ),
                     ),

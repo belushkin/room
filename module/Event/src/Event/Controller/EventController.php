@@ -43,7 +43,6 @@ class EventController extends AbstractActionController
         return array(
             'form' => $form,
             'list'  => $list,
-            'events' => $this->getEventTable()->fetchAll(),
             'messages' => $form->getMessages()
         );
     }
@@ -61,14 +60,18 @@ class EventController extends AbstractActionController
         // if it cannot be found, in which case go to the index page.
         try {
             $event = $this->getEventTable()->getEvent($id);
-        }
-        catch (\Exception $ex) {
+            $event->setServiceLocator($this->getServiceLocator());
+        } catch (\Exception $ex) {
             return $this->redirect()->toRoute('event', array(
                 'action' => 'index'
             ));
         }
 
         $form = $this->getEventForm();
+
+        $event->from = date('H:i',strtotime($event->from));
+        $event->to = date('H:i',strtotime($event->to));
+
         $form->bind($event);
         $form->get('submit')->setAttribute('value', 'Edit');
 
@@ -88,6 +91,7 @@ class EventController extends AbstractActionController
         return array(
             'id' => $id,
             'form' => $form,
+            'messages' => $form->getMessages()
         );
     }
 

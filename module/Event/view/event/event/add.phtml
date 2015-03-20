@@ -14,7 +14,8 @@ $this->headTitle($title);
 
         echo $this->form()->openTag($list);
         foreach ($options as $key => $option):
-            echo "<div class='checkbox'><label><input name='list-checkbox[]' value='$key' type='checkbox'>$option</label></div>";
+            echo "<div class='checkbox'><label><input name='list-checkbox[]' value='$key' type='checkbox'>$option</label>
+                    <a href='". $this->url('event', array('action'=>'edit', 'id' => $key)) . "'>Edit</a></div>";
         endforeach;
 //        echo $this->formMultiCheckbox($list->get('list-checkbox'));
 

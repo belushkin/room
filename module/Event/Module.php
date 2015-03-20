@@ -86,6 +86,10 @@ class Module implements AutoloaderProviderInterface, ConfigProviderInterface, Vi
                     $helper = new View\Helper\EventHelper($sm);
                     return $helper;
                 },
+                'user_helper' => function ($sm) {
+                    $helper = new View\Helper\UserHelper($sm);
+                    return $helper;
+                },
             ),
 
         );

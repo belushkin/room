@@ -38,10 +38,10 @@ class EventTable
     }
 
     // Explain SELECT id FROM `event` as e where '16:30' between e.from and e.to OR '16:45' between e.from and e.to
-    public function isNotIntersect(\DateTime $from, \DateTime $to)
+    public function isNotIntersect($id, \DateTime $from, \DateTime $to)
     {
-        $rowset = $this->tableGateway->select(function (Select $select) use ($from, $to) {
-            $select->where("'{$from->format('H:i')}' BETWEEN `from` AND `to` OR '{$to->format('H:i')}' BETWEEN `from` AND `to`");
+        $rowset = $this->tableGateway->select(function (Select $select) use ($id, $from, $to) {
+            $select->where(array("'{$from->format('H:i')}' BETWEEN `from` AND `to` OR '{$to->format('H:i')}' BETWEEN `from` AND `to`", "id != $id"));
         });
         return ($rowset->count()) ? false : true;
     }

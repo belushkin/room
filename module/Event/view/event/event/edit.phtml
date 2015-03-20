@@ -4,22 +4,27 @@
 $title = 'Edit event';
 $this->headTitle($title);
 ?>
-    <h1><?php echo $this->escapeHtml($title); ?></h1>
+<div class="row">
+    <h1><?php echo $this->escapeHtml($title); ?></h1><?php
+    $form = $this->form;
+    $form->setAttribute('action', $this->url('event', array('action' => 'edit', 'id' => $this->id)));
+    $form->prepare();
 
-<?php
-$form = $this->form;
-$form->setAttribute('action', $this->url(
-    'event',
-    array(
-        'action' => 'edit',
-        'id'     => $this->id,
-    )
-));
-$form->prepare();
-
-echo $this->form()->openTag($form);
-echo $this->formHidden($form->get('id'));
-echo $this->formRow($form->get('name'));
-echo $this->formRow($form->get('from'));
-echo $this->formSubmit($form->get('submit'));
-echo $this->form()->closeTag();
+    echo $this->form()->openTag($form);
+    echo $this->formHidden($form->get('id'));
+    echo $this->formHidden($form->get('date'));?>
+    <div class="form-group<?php echo (isset($messages['name'])) ? ' has-error' : '';?>"><?php
+        echo $this->formRow($form->get('name'));?>
+    </div>
+    <div class="form-group"><?php
+        echo $this->formRow($form->get('user_id')); ?>
+    </div>
+    <div class="form-group<?php echo (isset($messages['from'])) ? ' has-error' : '';?>"><?php
+        echo $this->formRow($form->get('from')); ?>
+    </div>
+    <div class="form-group<?php echo (isset($messages['to'])) ? ' has-error' : '';?>"><?php
+        echo $this->formRow($form->get('to')); ?>
+    </div> <?php
+    echo $this->formSubmit($form->get('submit'));
+    echo $this->form()->closeTag(); ?>
+</div>
