@@ -10,6 +10,7 @@ use Event\Model\EventTable;
 use Event\Model\User;
 use Event\Model\UserTable;
 use Event\Form\EventForm;
+use Event\Form\EventListForm;
 use Zend\Db\ResultSet\ResultSet;
 use Zend\Db\TableGateway\TableGateway;
 
@@ -54,6 +55,10 @@ class Module implements AutoloaderProviderInterface, ConfigProviderInterface, Vi
                 },
                 'Event\Form\EventForm' =>  function($sm) {
                     $form = new EventForm('event', $sm);
+                    return $form;
+                },
+                'Event\Form\EventListForm' =>  function($sm) {
+                    $form = new EventListForm('event-list', $sm);
                     return $form;
                 },
                 'EventTableGateway' => function ($sm) {

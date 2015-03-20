@@ -31,6 +31,12 @@ class EventTable
         return $row;
     }
 
+    public function getEvents(Array $ids = array())
+    {
+        $rowset = $this->tableGateway->select(array('id' => $ids));
+        return $rowset;
+    }
+
     // Explain SELECT id FROM `event` as e where '16:30' between e.from and e.to OR '16:45' between e.from and e.to
     public function isNotIntersect(\DateTime $from, \DateTime $to)
     {

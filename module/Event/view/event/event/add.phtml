@@ -1,17 +1,25 @@
 <?php
 // module/Event/view/event/event/add.phtml:
 
-$title = 'Add a event';
+$title = 'Add event';
 $this->headTitle($title);
 ?>
 <div class="row">
     <div class="col-md-6">
-        <h1><?php echo $this->escapeHtml('Event list'); ?></h1>
-        <ul> <?php
-            foreach ($events as $event): ?>
-                <li> <?php echo $this->escapeHtml($this->event_helper($event));?> </li> <?php
-            endforeach; ?>
-        </ul>
+        <h1><?php echo $this->escapeHtml('Event list'); ?></h1><?php
+        $list->setAttribute('action', $this->url('event', array('action' => 'delete')));
+        $list->prepare();
+        $element = $list->get('list-checkbox');
+        $options = $element->getValueOptions();
+
+        echo $this->form()->openTag($list);
+        foreach ($options as $key => $option):
+            echo "<div class='checkbox'><label><input name='list-checkbox[]' value='$key' type='checkbox'>$option</label></div>";
+        endforeach;
+//        echo $this->formMultiCheckbox($list->get('list-checkbox'));
+
+        echo $this->formSubmit($list->get('submit'));
+        echo $this->form()->closeTag(); ?>
     </div>
     <div class="col-md-6">
         <h1><?php echo $this->escapeHtml($title); ?></h1> <?php
@@ -21,7 +29,7 @@ $this->headTitle($title);
         echo $this->formHidden($form->get('id'));
         echo $this->formHidden($form->get('date'));?>
         <div class="form-group<?php echo (isset($messages['name'])) ? ' has-error' : '';?>"><?php
-            echo $this->formRow()->setInputErrorClass('has-error')->render($form->get('name'));?>
+            echo $this->formRow($form->get('name'));?>
         </div>
         <div class="form-group"><?php
             echo $this->formRow($form->get('user_id')); ?>

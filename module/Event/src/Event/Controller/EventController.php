@@ -11,6 +11,7 @@ class EventController extends AbstractActionController
 
     protected $eventTable;
     protected $eventForm;
+    protected $eventListForm;
     protected $eventModel;
 
     public function indexAction()
@@ -23,6 +24,7 @@ class EventController extends AbstractActionController
     public function addAction()
     {
         $form = $this->getEventForm();
+        $list = $this->getEventListForm();
 
         $request = $this->getRequest();
         if ($request->isPost()) {
@@ -40,6 +42,7 @@ class EventController extends AbstractActionController
         }
         return array(
             'form' => $form,
+            'list'  => $list,
             'events' => $this->getEventTable()->fetchAll(),
             'messages' => $form->getMessages()
         );
@@ -90,27 +93,29 @@ class EventController extends AbstractActionController
 
     public function deleteAction()
     {
-        $id = (int) $this->params()->fromRoute('id', 0);
-        if (!$id) {
+        $request = $this->getRequest();
+
+        if (!$request->isPost()) {
             return $this->redirect()->toRoute('event');
         }
 
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $del = $request->getPost('del', 'No');
+        $ids = $request->getPost('list-checkbox', array());
+        $del = $request->getPost('del', 'No');
 
-            if ($del == 'Yes') {
-                $id = (int) $request->getPost('id');
+        if (empty($ids)) {
+            return $this->redirect()->toRoute('event');
+        }
+
+        if ($del == 'Yes') {
+            foreach ($ids as $id) {
                 $this->getEventTable()->deleteEvent($id);
             }
-
             // Redirect to list of events
             return $this->redirect()->toRoute('event');
         }
 
         return array(
-            'id'    => $id,
-            'event' => $this->getEventTable()->getEvent($id)
+            'events' => $this->getEventTable()->getEvents($ids)
         );
     }
 
@@ -123,6 +128,15 @@ class EventController extends AbstractActionController
         return $this->eventTable;
     }
 
+    public function getEventModel()
+    {
+        if (!$this->eventModel) {
+            $sm = $this->getServiceLocator();
+            $this->eventModel = $sm->get('Event\Model\Event');
+        }
+        return $this->eventModel;
+    }
+
     public function getEventForm()
     {
         if (!$this->eventForm) {
@@ -132,13 +146,13 @@ class EventController extends AbstractActionController
         return $this->eventForm;
     }
 
-    public function getEventModel()
+    public function getEventListForm()
     {
-        if (!$this->eventModel) {
+        if (!$this->eventListForm) {
             $sm = $this->getServiceLocator();
-            $this->eventModel = $sm->get('Event\Model\Event');
+            $this->eventListForm = $sm->get('Event\Form\EventListForm');
         }
-        return $this->eventModel;
+        return $this->eventListForm;
     }
 
 }

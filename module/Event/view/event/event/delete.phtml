@@ -1,25 +1,31 @@
 <?php
 // module/Event/view/event/event/delete.phtml:
 
-$title = 'Delete event';
+$title = 'Delete events';
 $this->headTitle($title);
 ?>
 <h1><?php echo $this->escapeHtml($title); ?></h1>
 
-<p>Are you sure that you want to delete
-    '<?php echo $this->escapeHtml($event->name); ?>' by
-    '<?php echo $this->escapeHtml($event->from); ?>'?
-</p>
+<p>Are you sure that you want to delete</p>
+    <ul><?php
+    $ids = array();
+
+    foreach ($this->events as $event):
+        echo "<li>" . $this->escapeHtml($this->event_helper($event)) . "</li>";
+        $ids[] = $event->id;
+    endforeach; ?>
+    </ul>
 <?php
 $url = $this->url('event', array(
-    'action' => 'delete',
-    'id'     => $this->id,
+    'action' => 'delete'
 ));
 ?>
 <form action="<?php echo $url; ?>" method="post">
-    <div>
-        <input type="hidden" name="id" value="<?php echo (int) $event->id; ?>" />
-        <input type="submit" name="del" value="Yes" />
-        <input type="submit" name="del" value="No" />
+    <div class="form-group"> <?php
+        foreach ($ids as $id):
+            echo "<input type='hidden' name='list-checkbox[]' value='$id' />";
+        endforeach; ?>
+        <input type="submit" class="btn btn-default" name="del" value="Yes" />
+        <input type="submit" class="btn btn-default" name="del" value="No" />
     </div>
 </form>
