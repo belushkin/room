@@ -11,6 +11,7 @@ class Event implements InputFilterAwareInterface
     public $id;
     public $user_id;
     public $name;
+    public $date;
     public $from;
     public $to;
     protected $inputFilter;
@@ -20,6 +21,7 @@ class Event implements InputFilterAwareInterface
         $this->id       = (!empty($data['id']))         ? $data['id']       : null;
         $this->user_id  = (!empty($data['user_id']))    ? $data['user_id']  : null;
         $this->name     = (!empty($data['name']))       ? $data['name']     : null;
+        $this->date     = (!empty($data['date']))       ? $data['date']     : null;
         $this->from     = (!empty($data['from']))       ? $data['from']     : null;
         $this->to       = (!empty($data['to']))         ? $data['to']       : null;
     }

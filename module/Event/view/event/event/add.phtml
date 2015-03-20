@@ -1,17 +1,39 @@
 <?php
 // module/Event/view/event/event/add.phtml:
 
-$title = 'Add new event';
+$title = 'Add a event';
 $this->headTitle($title);
 ?>
-    <h1><?php echo $this->escapeHtml($title); ?></h1>
-<?php
-$form->setAttribute('action', $this->url('event', array('action' => 'add')));
-$form->prepare();
+<div class="row">
+    <div class="col-md-6">
+        <h1><?php echo $this->escapeHtml('Event list'); ?></h1>
+        <ul> <?php
+            foreach ($events as $event): ?>
+                <li> <?php echo $this->escapeHtml($this->event_helper($event));?> </li> <?php
+            endforeach; ?>
+        </ul>
+    </div>
+    <div class="col-md-6">
+        <h1><?php echo $this->escapeHtml($title); ?></h1> <?php
+        $form->setAttribute('action', $this->url('event', array('action' => 'add')));
+        $form->prepare();
+        echo $this->form()->openTag($form);
+        echo $this->formHidden($form->get('id'));
+        echo $this->formHidden($form->get('date'));?>
+        <div class="form-group"><?php
+            echo $this->formRow($form->get('name'));?>
+        </div>
+        <div class="form-group"><?php
+            echo $this->formRow($form->get('user_id')); ?>
+        </div>
+        <div class="form-group"><?php
+            echo $this->formRow($form->get('from')); ?>
+        </div>
+        <div class="form-group"><?php
+            echo $this->formRow($form->get('to')); ?>
+        </div> <?php
+        echo $this->formSubmit($form->get('submit'));
+        echo $this->form()->closeTag(); ?>
+    </div>
+</div>
 
-echo $this->form()->openTag($form);
-echo $this->formHidden($form->get('id'));
-echo $this->formRow($form->get('name'));
-echo $this->formRow($form->get('from'));
-echo $this->formSubmit($form->get('submit'));
-echo $this->form()->closeTag();

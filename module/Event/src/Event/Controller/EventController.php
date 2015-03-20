@@ -5,12 +5,12 @@ namespace Event\Controller;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Event\Model\Event;
-use Event\Form\EventForm;
 
 class EventController extends AbstractActionController
 {
 
     protected $eventTable;
+    protected $eventForm;
 
     public function indexAction()
     {
@@ -21,8 +21,7 @@ class EventController extends AbstractActionController
 
     public function addAction()
     {
-        $form = new EventForm();
-        $form->get('submit')->setValue('Add');
+        $form = $this->getEventForm();
 
         $request = $this->getRequest();
         if ($request->isPost()) {
@@ -38,7 +37,7 @@ class EventController extends AbstractActionController
                 return $this->redirect()->toRoute('event');
             }
         }
-        return array('form' => $form);
+        return array('form' => $form, 'events' => $this->getEventTable()->fetchAll());
 
     }
 
@@ -62,7 +61,7 @@ class EventController extends AbstractActionController
             ));
         }
 
-        $form  = new EventForm();
+        $form = $this->getEventForm();
         $form->bind($event);
         $form->get('submit')->setAttribute('value', 'Edit');
 
@@ -119,5 +118,15 @@ class EventController extends AbstractActionController
         }
         return $this->eventTable;
     }
+
+    public function getEventForm()
+    {
+        if (!$this->eventForm) {
+            $sm = $this->getServiceLocator();
+            $this->eventForm = $sm->get('Event\Form\EventForm');
+        }
+        return $this->eventForm;
+    }
+
 }
 
