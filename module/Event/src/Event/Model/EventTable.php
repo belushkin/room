@@ -16,7 +16,7 @@ class EventTable
 
     public function fetchAll()
     {
-        $resultSet = $this->tableGateway->select();
+        $resultSet = $this->tableGateway->select((array('date' => date('Y-m-d', time()))));
         return $resultSet;
     }
 
@@ -41,7 +41,7 @@ class EventTable
     public function isNotIntersect($id, \DateTime $from, \DateTime $to)
     {
         $rowset = $this->tableGateway->select(function (Select $select) use ($id, $from, $to) {
-            $select->where(array("'{$from->format('H:i')}' BETWEEN `from` AND `to` OR '{$to->format('H:i')}' BETWEEN `from` AND `to`", "id != $id"));
+            $select->where(array("('{$from->format('H:i')}' BETWEEN `from` AND `to` OR '{$to->format('H:i')}' BETWEEN `from` AND `to`)", "`id` != $id", "`date` = '" . date('Y-m-d', time()) . "'" ));
         });
         return ($rowset->count()) ? false : true;
     }

@@ -144,7 +144,7 @@ class Event implements InputFilterAwareInterface, ServiceLocatorAwareInterface
                                 if (!$from || !$to) {
                                     return false;
                                 }
-                                return $this->serviceLocator->get('Event\Model\EventTable')->isNotIntersect($context['id'], $from, $to);
+                                return $this->serviceLocator->get('Event\Model\EventTable')->isNotIntersect(intval($context['id']), $from, $to);
                             },
                         ),
                     ),
