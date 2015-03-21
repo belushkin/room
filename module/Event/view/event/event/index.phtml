@@ -4,7 +4,7 @@
 $this->headTitle($this->date_helper(time()));
 ?>
 <div class="row">
-    <p><a href="<?php echo $this->url('event', array('action'=>'add'));?>">Add new event</a></p><?php
+    <!-- <p><a href="<?php echo $this->url('event', array('action'=>'add'));?>">Add new event</a></p>--><?php
     foreach ($result as $date => $events) : ?>
         <h2><?php echo $this->escapeHtml($this->date_helper(strtotime($date))); ?></h2>
         <table class="table table-striped"><?php
