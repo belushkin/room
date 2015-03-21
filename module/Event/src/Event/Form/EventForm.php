@@ -25,9 +25,17 @@ class EventForm extends Form implements ServiceLocatorAwareInterface
         ));
         $this->add(array(
             'name' => 'date',
-            'type' => 'Hidden',
+            'type' => 'Zend\Form\Element\Date',
+            'options' => array(
+                'label' => 'Date',
+                'format' => 'Y-m-d'
+            ),
             'attributes' => array(
-                'value' => date("Y-m-d", time())
+                'value' => date("Y-m-d", time()),
+                'min' => '2015-01-01',
+                'max' => '2020-01-01',
+                'step' => '1',
+                'class' => 'form-control'
             )
         ));
         $this->add(array(

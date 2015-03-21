@@ -16,8 +16,25 @@ class EventController extends AbstractActionController
 
     public function indexAction()
     {
+        $dates  = array();
+        $result = array();
+
+        $t      = $this->getEventTable()->getDates();
+        if ($t->getAffectedRows()) {
+            foreach ($t as $date) {
+                $dates[] = $date['date'];
+            }
+        }
+
+        $t = $this->getEventTable()->fetchAll($dates);
+        if ($t->getAffectedRows()) {
+            foreach ($t as $event) {
+                $result[$event['date']][] = $event;
+            }
+        }
+
         return new ViewModel(array(
-            'events' => $this->getEventTable()->fetchAll(),
+            'result'    => $result,
         ));
     }
 
@@ -104,7 +121,7 @@ class EventController extends AbstractActionController
         }
 
         $ids = $request->getPost('list-checkbox', array());
-        $del = $request->getPost('del', 'No');
+        $del = $request->getPost('del');
 
         if (empty($ids)) {
             return $this->redirect()->toRoute('event');

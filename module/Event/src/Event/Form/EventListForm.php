@@ -20,14 +20,23 @@ class EventListForm extends Form implements ServiceLocatorAwareInterface
 
         $this->setServiceLocator($serviceLocator);
 
-        // Fetching all users for Organizer
-        $options = array();
-        $events = $this->getEventTable()->fetchAll();
-        foreach ($events as $event) {
-            $user = $this->getUserTable()->getUser($event->user_id);
-            $options[$event->id] = "{$user->name}, " . date('H:i', strtotime($event->from)) . " - " . date('H:i', strtotime($event->to)) . "h, " . date("F jS", strtotime($event->date));
+        $options    = array();
+        $dates      = array();
+
+        $t      = $this->getEventTable()->getDates();
+        if ($t->getAffectedRows()) {
+            foreach ($t as $date) {
+                $dates[] = $date['date'];
+            }
         }
 
+        $events = $this->getEventTable()->fetchAll($dates);
+        if ($events->getAffectedRows()) {
+            foreach ($events as $event) {
+                $user = $this->getUserTable()->getUser($event['user_id']);
+                $options[$event['id']] = "{$user->name}, " . date('H:i', strtotime($event['from'])) . " - " . date('H:i', strtotime($event['to'])) . "h, " . date("F jS", strtotime($event['date']));
+            }
+        }
         $this->add(array(
             'type' => 'Zend\Form\Element\MultiCheckbox',
             'name' => 'list-checkbox',

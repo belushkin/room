@@ -140,12 +140,13 @@ class Event implements InputFilterAwareInterface, ServiceLocatorAwareInterface
                                 \Zend\Validator\Callback::INVALID_VALUE => 'This event is overlapping another one',
                             ),
                             'callback' => function($value, $context = array()) use($serviceLocator) {
+                                $date = \DateTime::createFromFormat('Y-m-d', $context['date']);
                                 $from = \DateTime::createFromFormat('H:i', $context['from']);
                                 $to = \DateTime::createFromFormat('H:i', $value);
                                 if (!$from || !$to) {
                                     return false;
                                 }
-                                return $serviceLocator->get('Event\Model\EventTable')->isNotIntersect(intval($context['id']), $from, $to);
+                                return $serviceLocator->get('Event\Model\EventTable')->isNotIntersect(intval($context['id']), $date, $from, $to);
                             },
                         ),
                     ),

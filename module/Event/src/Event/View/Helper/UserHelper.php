@@ -3,7 +3,6 @@
 namespace Event\View\Helper;
 
 use Zend\View\Helper\AbstractHelper;
-use Event\Model\Event;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 class UserHelper extends AbstractHelper
@@ -15,9 +14,9 @@ class UserHelper extends AbstractHelper
         $this->serviceManager = $serviceManager;
     }
 
-    public function __invoke(Event $event)
+    public function __invoke(Array $event)
     {
-        $user = $this->serviceManager->getServiceLocator()->get('Event\Model\UserTable')->getUser($event->user_id);
+        $user = $this->serviceManager->getServiceLocator()->get('Event\Model\UserTable')->getUser($event['user_id']);
         return $user->name;
     }
 

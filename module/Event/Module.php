@@ -90,6 +90,10 @@ class Module implements AutoloaderProviderInterface, ConfigProviderInterface, Vi
                     $helper = new View\Helper\UserHelper($sm);
                     return $helper;
                 },
+                'date_helper' => function ($sm) {
+                    $helper = new View\Helper\DateHelper();
+                    return $helper;
+                },
             ),
 
         );

@@ -14,10 +14,34 @@ class EventTable
         $this->tableGateway = $tableGateway;
     }
 
-    public function fetchAll()
+    public function fetchAll(Array $dates = null)
     {
-        $resultSet = $this->tableGateway->select((array('date' => date('Y-m-d', time()))));
-        return $resultSet;
+        $sql = $this->tableGateway->getSql();
+        $select = $sql->select();
+
+        if (!empty($dates)) {
+            $select->where(array('date' => $dates));
+        }
+        $select->order('date DESC');
+        $select->order('from ASC');
+        $statement = $sql->prepareStatementForSqlObject($select);
+
+        return $statement->execute();
+    }
+
+    // SELECT date FROM event GROUP BY date ORDER BY date DESC
+    public function getDates()
+    {
+        $sql = $this->tableGateway->getSql();
+        $select = $sql->select();
+
+        $select->columns(array('date'));
+        $select->group('date');
+        $select->order('date DESC');
+        $select->limit(5);
+        $statement = $sql->prepareStatementForSqlObject($select);
+
+        return $statement->execute();
     }
 
     public function getEvent($id)
@@ -38,10 +62,10 @@ class EventTable
     }
 
     // Explain SELECT id FROM `event` as e where '16:30' between e.from and e.to OR '16:45' between e.from and e.to
-    public function isNotIntersect($id, \DateTime $from, \DateTime $to)
+    public function isNotIntersect($id, \DateTime $date, \DateTime $from, \DateTime $to)
     {
-        $rowset = $this->tableGateway->select(function (Select $select) use ($id, $from, $to) {
-            $select->where(array("('{$from->format('H:i')}' BETWEEN `from` AND `to` OR '{$to->format('H:i')}' BETWEEN `from` AND `to`)", "`id` != $id", "`date` = '" . date('Y-m-d', time()) . "'" ));
+        $rowset = $this->tableGateway->select(function (Select $select) use ($id, $date, $from, $to) {
+            $select->where(array("('{$from->format('H:i')}' > `from` AND '{$from->format('H:i')}' < `to` OR '{$to->format('H:i')}' > `from` AND '{$to->format('H:i')}' < `to`)", "`id` != $id", "`date` = '{$date->format('Y-m-d')}'" ));
         });
         return ($rowset->count()) ? false : true;
     }
