@@ -116,6 +116,8 @@ class EventController extends AbstractActionController
             }
             // Redirect to list of events
             return $this->redirect()->toRoute('event');
+        } elseif ($del == 'No') {
+            return $this->redirect()->toRoute('event');
         }
 
         return array(
