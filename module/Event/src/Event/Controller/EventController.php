@@ -16,7 +16,7 @@ class EventController extends AbstractActionController
 
     public function indexAction()
     {
-        $dates  = array();
+        $dates  = array('2015-04-01');
         $result = array();
 
         $t      = $this->getEventTable()->getDates();

@@ -22,7 +22,7 @@ class EventTable
         if (!empty($dates)) {
             $select->where(array('date' => $dates));
         }
-        $select->order('date DESC');
+        $select->order('date ASC');
         $select->order('from ASC');
         $statement = $sql->prepareStatementForSqlObject($select);
 
@@ -37,8 +37,9 @@ class EventTable
 
         $select->columns(array('date'));
         $select->group('date');
-        $select->order('date DESC');
-        $select->limit(5);
+        $select->where('TIMESTAMP(`date`,`to`) > NOW()');
+        //$select->order('date ASC');
+        $select->limit(10);
         $statement = $sql->prepareStatementForSqlObject($select);
 
         return $statement->execute();
